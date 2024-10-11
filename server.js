@@ -4,6 +4,7 @@ const session = require('express-session');
 const puppeteer = require('puppeteer');
 const { JSDOM } = require('jsdom');
 const createDOMPurify = require('dompurify');
+const path = require('path');
 const { adminCredentials } = require('./models/account.js');
 const { FLAG } = require('./models/flag.js');
 const app = express();
@@ -23,7 +24,7 @@ const { username: id, password: pw } = adminCredentials;
 
 async function readUrl(url) {
   try {
-    const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+    const browser = await puppeteer.launch({ headless: true, executablePath: path.join(__dirname, 'chromedriver', 'chromium'), args: ['--no-sandbox', '--disable-setuid-sandbox'] });
     const page = await browser.newPage();
     await page.goto('http://localhost:1105/login', { waitUntil: 'load' });
     await page.type('input[name="username"]', id);
